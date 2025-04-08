@@ -20,17 +20,80 @@ const playlist = [
   console.table(playlist.filter(song => song.duration > "5:00"))
 
 
-//   console.table(upperCasePlaylist);
-const upperCasePlaylist = playlist.map(({artist, title, index}) => ({
-    artist: artist.toUpperCase(),
-    title: title.toUpperCase()
-}))
-console.table(upperCasePlaylist)
 
 
-// function formatDuration(){
-//    const durat = playlist.split(({"duration"}) => ({
 
-//    }))
-// }
-// formatDuration()
+  const longSongs = playlist.filter(song => {
+    const durationParts = song.duration.split(":");
+    const minutes = parseInt(durationParts[0]);
+    const seconds = parseInt(durationParts[1]);
+    const totalSeconds = minutes * 60 + seconds;
+    return totalSeconds > 300; 
+  });
+  console.table(longSongs);
+  
+ 
+  const upperCasePlaylist = playlist.map(song => ({
+    title: song.title.toUpperCase(),
+    artist: song.artist.toUpperCase(),
+    duration: song.duration,
+    genre: song.genre,
+    playCount: 0
+  }));
+  console.table(upperCasePlaylist);
+  
+  // Step 5: String Manipulation
+  function formatDuration(duration) {
+    const parts = duration.split(":");
+    const minutes = parseInt(parts[0]);
+    const seconds = parseInt(parts[1]);
+    return `${minutes} minutes and ${seconds} seconds`;
+  }
+  
+  playlist.forEach(song => {
+    const formatted = formatDuration(song.duration);
+    console.log(`${song.title}: ${formatted}`);
+  });
+  
+
+  function findSong(searchTerm) {
+    const lowerSearchTerm = searchTerm.toLowerCase();
+    return playlist.filter(song =>
+      song.title.toLowerCase().includes(lowerSearchTerm) ||
+      song.artist.toLowerCase().includes(lowerSearchTerm)
+    );
+  }
+  
+  const queenSongs = findSong("queen");
+  console.table(queenSongs);
+  
+  // Step 7: Sort the Playlist
+  const sortedByTitle = [...playlist].sort((a, b) => {
+    if (a.title < b.title) {
+      return -1;
+    }
+    if (a.title > b.title) {
+      return 1;
+    }
+    return 0;
+  });
+  console.table(sortedByTitle);
+  
+  const sortedByDuration = [...playlist].sort((a, b) => {
+    const durationAparts = a.duration.split(":");
+    const totalSecondsA = parseInt(durationAparts[0]) * 60 + parseInt(durationAparts[1]);
+    const durationBparts = b.duration.split(":");
+    const totalSecondsB = parseInt(durationBparts[0]) * 60 + parseInt(durationBparts[1]);
+    return totalSecondsA - totalSecondsB;
+  });
+  console.table(sortedByDuration);
+  
+  // Step 8: Fun Challenge - Random Song Picker
+  function playRandomSong() {
+    const randomIndex = Math.floor(Math.random() * playlist.length);
+    const randomSong = playlist[randomIndex];
+    console.log(`Now playing a random song: ${randomSong.title} by ${randomSong.artist}`);
+  }
+  
+  playRandomSong();
+   
